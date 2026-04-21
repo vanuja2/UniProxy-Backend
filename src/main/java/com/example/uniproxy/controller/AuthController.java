@@ -1,5 +1,6 @@
 package com.example.uniproxy.controller;
 
+import com.example.uniproxy.dto.LoginRequest;
 import com.example.uniproxy.dto.UserRegistrationRequest;
 import com.example.uniproxy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,5 +16,13 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestBody UserRegistrationRequest request) {
         return userService.registerUser(request);
+    }
+
+    @Autowired
+    private com.example.uniproxy.dto.LoginRequest loginRequest; // Request body එකට
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+        return userService.login(request);
     }
 }
