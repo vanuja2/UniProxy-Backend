@@ -13,16 +13,17 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    // Register Endpoint
     @PostMapping("/register")
     public String register(@RequestBody UserRegistrationRequest request) {
         return userService.registerUser(request);
     }
 
-    @Autowired
-    private com.example.uniproxy.dto.LoginRequest loginRequest; // Request body එකට
-
+    // Login Endpoint
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest request) {
+        // මෙතනදී 'request' කියන එක parameter එකක් විදියට එනවා,
+        // ඒ නිසා field එකක් විදියට autowire කරන්න ඕනේ නැහැ.
         return userService.login(request);
     }
 }
