@@ -25,4 +25,8 @@ public class AuthController {
 
         return userService.login(request);
     }
+    @GetMapping("/test-secure")
+    public String testSecure() {
+        return "Can only see this who have the token!";
+    }
 }
