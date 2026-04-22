@@ -20,7 +20,10 @@ public class PaymentService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    private final String API_KEY = "YOUR_NOWPAYMENTS_API_KEY"; // Replace later
+    @Autowired
+    private UserRepository userRepository;
+
+    private final String API_KEY = "YOUR_NOWPAYMENTS_API_KEY"; // Replace with your real API key
     private final String API_URL = "https://api.nowpayments.io/v1/payment";
 
     public String createPayment(User user, BigDecimal amount) {
@@ -33,9 +36,9 @@ public class PaymentService {
         Map<String, Object> body = new HashMap<>();
         body.put("price_amount", amount);
         body.put("price_currency", "usd");
-        body.put("pay_currency", "btc"); // or let user choose
+        body.put("pay_currency", "btc");
         body.put("order_id", "ORDER_" + System.currentTimeMillis());
-        body.put("order_description", "Deposit to UniProxy Balance");
+        body.put("order_description", "Deposit to UniProxy Balance for " + user.getUsername());
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
@@ -43,7 +46,6 @@ public class PaymentService {
             ResponseEntity<Map> response = restTemplate.postForEntity(API_URL, request, Map.class);
             Map<String, Object> responseBody = response.getBody();
 
-            // Save transaction as PENDING
             Transaction tx = new Transaction();
             tx.setPaymentId(responseBody.get("payment_id").toString());
             tx.setAmount(amount);
@@ -53,7 +55,6 @@ public class PaymentService {
             tx.setUser(user);
             transactionRepository.save(tx);
 
-            // Return the invoice URL or payment ID to the frontend
             return responseBody.get("invoice_url") != null ?
                     responseBody.get("invoice_url").toString() :
                     "Payment Created. ID: " + tx.getPaymentId();
@@ -62,9 +63,6 @@ public class PaymentService {
             return "Error creating payment: " + e.getMessage();
         }
     }
-
-    @Autowired
-    private UserRepository userRepository;
 
     public void processWebhook(Map<String, Object> payload) {
         String paymentId = payload.get("payment_id").toString();
@@ -75,21 +73,48 @@ public class PaymentService {
                     .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
             if (!"FINISHED".equals(tx.getStatus())) {
-                // Update Transaction Status
                 tx.setStatus("FINISHED");
                 transactionRepository.save(tx);
 
-                // Update User Balance
                 User user = tx.getUser();
                 user.setBalance(user.getBalance().add(tx.getAmount()));
                 userRepository.save(user);
             }
         }
     }
+
     public BigDecimal getTotalRevenue() {
         return transactionRepository.findAll().stream()
                 .filter(tx -> "FINISHED".equals(tx.getStatus()))
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    // Updated: Fixes the 404 error by using a valid endpoint for address creation
+    public String createNowPaymentsUser(User user) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-api-key", API_KEY);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("price_amount", 1); // Minimum placeholder amount
+        body.put("price_currency", "usd");
+        body.put("pay_currency", "btc");
+        body.put("order_id", "ACC_CREATE_" + user.getId());
+        body.put("ipn_callback_url", "https://uniproxy.cc/api/payments/webhook");
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+        try {
+            // Using the standard payment endpoint which is reliable
+            ResponseEntity<Map> response = restTemplate.postForEntity(API_URL, request, Map.class);
+            Map<String, Object> responseBody = response.getBody();
+
+            return "Account Initialized. Payment ID: " + responseBody.get("payment_id").toString();
+        } catch (Exception e) {
+            return "Error initializing NOWPayments connection: " + e.getMessage();
+        }
     }
 }

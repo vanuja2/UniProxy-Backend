@@ -33,4 +33,13 @@ public class PaymentController {
     public void handleWebhook(@RequestBody Map<String, Object> payload) {
         paymentService.processWebhook(payload);
     }
+    @PostMapping("/create-account")
+    public String createNowPaymentsAccount() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // PaymentService එක හරහා NOWPayments API එක call කරනවා
+        return paymentService.createNowPaymentsUser(user);
+    }
 }

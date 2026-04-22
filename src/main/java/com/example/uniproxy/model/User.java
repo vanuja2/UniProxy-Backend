@@ -23,5 +23,7 @@ public class User {
 
     private BigDecimal balance = BigDecimal.ZERO;
 
-    private String role = "USER"; // Default role එක USER
+    private String role = "USER"; // Default role
+
+    private String nowPaymentsUserId;
 }
