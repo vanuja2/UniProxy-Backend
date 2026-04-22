@@ -8,8 +8,8 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    private final String jwtSecret = "yourSecretKeyForUniProxyProject2026Secure"; // ලොකු secret key එකක් දෙන්න
-    private final int jwtExpirationMs = 86400000; // පැය 24ක් valid
+    private final String jwtSecret = "yourSecretKeyForUniProxyProject2026Secure";
+    private final int jwtExpirationMs = 86400000; // valid 24 hrs
 
     private final Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 

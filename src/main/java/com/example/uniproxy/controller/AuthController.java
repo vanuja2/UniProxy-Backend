@@ -22,8 +22,7 @@ public class AuthController {
     // Login Endpoint
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest request) {
-        // මෙතනදී 'request' කියන එක parameter එකක් විදියට එනවා,
-        // ඒ නිසා field එකක් විදියට autowire කරන්න ඕනේ නැහැ.
+
         return userService.login(request);
     }
 }

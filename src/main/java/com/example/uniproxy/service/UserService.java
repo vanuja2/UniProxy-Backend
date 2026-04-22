@@ -1,6 +1,6 @@
 package com.example.uniproxy.service;
 
-import com.example.uniproxy.config.JwtUtils; // මේ import එක තියෙනවාද බලන්න
+import com.example.uniproxy.config.JwtUtils;
 import com.example.uniproxy.dto.LoginRequest;
 import com.example.uniproxy.dto.UserRegistrationRequest;
 import com.example.uniproxy.model.User;
@@ -20,7 +20,7 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired // මේක මෙතනට ගන්න (Class level)
+    @Autowired
     private JwtUtils jwtUtils;
 
     // 1. Register User Method
@@ -39,7 +39,7 @@ public class UserService {
         return "User registered successfully!";
     }
 
-    // 2. Login Method (මේක registerUser එකෙන් එලියට ගන්න)
+
     public String login(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
