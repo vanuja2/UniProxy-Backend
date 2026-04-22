@@ -45,7 +45,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return jwtUtils.generateToken(user.getUsername());
+            return jwtUtils.generateToken(user.getUsername(), user.getRole());
         } else {
             throw new RuntimeException("Invalid password");
         }

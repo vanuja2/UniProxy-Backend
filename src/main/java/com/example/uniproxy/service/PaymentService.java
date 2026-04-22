@@ -86,4 +86,10 @@ public class PaymentService {
             }
         }
     }
+    public BigDecimal getTotalRevenue() {
+        return transactionRepository.findAll().stream()
+                .filter(tx -> "FINISHED".equals(tx.getStatus()))
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
