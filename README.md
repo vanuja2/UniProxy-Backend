@@ -1,20 +1,22 @@
-# UniProxy Backend System
+# UniProxy.cc Backend 🚀
 
-A secure Proxy Management and Automated Payment system built using **Spring Boot**, **MySQL**, and **Docker**.
+Professional Proxy Management & Crypto Payment System.
 
-## 🚀 Key Features
-- **JWT Authentication:** Secure login and token-based access control.
-- **Role-Based Security:** Different access levels for `USER` and `ADMIN`.
-- **Payment Integration:** Automated crypto payments via NOWPayments API and Webhooks.
-- **Proxy Management:** Ability to purchase and track proxies with automated balance deduction.
+## ✅ Project Milestone: 12 Secure APIs Completed
+- **Auth Module:** JWT-based Register & Login.
+- **User Module:** Profile fetching, Transaction history, and Password security.
+- **Proxy Module:** Integrated with CatProxies for purchasing and list management.
+- **Payment Module:** Automated NOWPayments integration with IPN Webhooks.
+- **Admin Module:** Revenue tracking and User management tools.
 
-## 🛠️ Tech Stack
-- **Backend:** Java 17, Spring Boot 3.x, Spring Security
-- **Database:** MySQL 8.0 (Dockerized)
-- **Security:** JWT (JSON Web Tokens), BCrypt Password Hashing
-- **Tools:** Maven, Postman, Docker Desktop
+## 🛠 Tech Stack
+- Spring Boot 3.x
+- Spring Security (JWT)
+- MySQL & Hibernate
+- Docker for Database
+- NOWPayments API
 
-## ⚙️ How to Run
-1. Start the database using Docker: `docker run --name proxy_db ...`
-2. Update `application.properties` with your DB credentials.
-3. Run the app: `./mvnw spring-boot:run`
+## 🔒 Security Features
+- Role-Based Access Control (USER/ADMIN).
+- BCrypt Password Hashing.
+- Stateless Session Management.
